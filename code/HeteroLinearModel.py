@@ -17,7 +17,7 @@ class HeteroLinearModel(object):
     @property
     def coef_(self):
         return self.__a
-    
+        
     @property
     def multiplicity_(self):
         return self.__c
