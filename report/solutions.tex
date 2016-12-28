@@ -67,5 +67,72 @@ $e_i$ is the true noise, instead of OLS residuals.
   \label{fig:pattern}
 \end{figure}
 
+\section{Heteroskedastic Linear Model}
+
+According to the analysis of data pattern, the noise in the linear model we propose is
+\begin{equation}
+  e_i \mid x_i \sim \mathcal{N}\left(0,c^2\left|x_i\right|\right),
+\end{equation}
+i.e., the conditional distribution of noise given $x_i$ is normal, and the variance
+is proportional to $\left|x_i\right|$.  We can write the conditional pdf of $e_i$ as
+\begin{equation}
+  f\left(e_i\mid x_i\right) = \frac{1}{\sqrt{2\pi c^2\left(\left|x_i\right|+\eta\right)}}
+  \exp\left(-\frac{e^2_i}{2c^2\left(\left|x_i\right|+\eta\right)}\right).
+\end{equation}
+Here we used $\eta\to0^{+}$ to avoid divengence as $x_i\to0$.  The log-likelihood function
+of each data set can be written as
+\begin{equation}
+  \widehat{l}_n\left(a,b,c\mid x\right) =
+  \frac{1}{n}\sum^n_{i=1}\ln f\left(y_i-ax_i-b\mid x_i\right),
+\end{equation}
+and in machine learning framework, we can formulate loss function $J$ as
+\begin{equation}
+  J\left(a,b,c\right) = -\widehat{l}_n\left(a,b,c\mid x\right) =
+  \frac{1}{2}\ln\left(2\pi c^2\right) +
+  \frac{1}{2n}\sum^n_{i=1}\ln\left(\left|x_i\right|+\eta\right) +
+  \frac{1}{2nc^2}\sum^n_{i=1}\frac{\left(y_i-ax_i-b\right)^2}{\left|x_i\right|+\eta}.
+\end{equation}
+
+The point estimate of parameters can be obtained by minimizing loss function $J$.
+The minimum can be obtained with condition
+\begin{equation}
+  \left\{
+  \begin{array}{ccc}
+    \frac{\partial}{\partial a}J & = & 0,\\
+    \frac{\partial}{\partial b}J & = & 0,\\
+    \frac{\partial}{\partial c}J & = & 0.\\
+  \end{array}
+  \right.
+\end{equation}
+For $a$ and $b$, we can solve as
+\begin{eqnarray}
+  \sum^n_{i=1}\frac{\left(y_i-ax_i-b\right)x_i}{\left|x_i\right|+\eta} &=& 0,\nonumber\\
+  \sum^n_{i=1}\frac{y_i-ax_i-b}{\left|x_i\right|+\eta} &=& 0.\nonumber
+\end{eqnarray}
+In matrix form, $a$ and $b$ are obtained as
+\begin{equation}
+  \left(
+  \begin{array}{c}
+    a\\
+    b\\
+  \end{array}
+  \right) = \left(
+  \begin{array}{cc}
+    \sum^n_{i=1}\frac{x^2_i}{\left|x_i\right|+\eta} & \sum^n_{i=1}\frac{x_i}{\left|x_i\right|+\eta}\\
+    \sum^n_{i=1}\frac{x_i}{\left|x_i\right|+\eta} & \sum^n_{i=1}\frac{1}{\left|x_i\right|+\eta}\\
+  \end{array}
+  \right)^{-1}\left(
+  \begin{array}{c}
+    \sum^n_{i=1}\frac{x_iy_i}{\left|x_i\right|+\eta}\\
+    \sum^n_{i=1}\frac{y_i}{\left|x_i\right|+\eta}\\
+  \end{array}
+  \right).
+\end{equation}
+When $a$ and $b$ are obtained, it is straightforward that
+\begin{equation}
+  c = \sqrt{\sum^n_{i=1}\frac{\left(y_i-ax_i-b\right)^2}{\left|x_i\right|+\eta}}.
+\end{equation}
+
+Fitting each data set, the point estimate of $a$ and $b$ are summarized
 
 \end{document}

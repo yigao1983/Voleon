@@ -67,6 +67,7 @@ def evaluate_params(csv_files):
         hlm = HLM.HeteroLinearModel().fit(X, y)
         hlm_df.loc[idx] = pd.Series([csv_file.split("/")[-1], hlm.coef_, hlm.intercept_], \
                                     index=hlm_df.columns)
+        print(hlm.multiplicity_)
     
     hlm_df.to_csv("hlm.csv")
     
